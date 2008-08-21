@@ -64,6 +64,16 @@ describe ThinkingSphinx::Index do
       conf.should_not match(/sql_sock/)
     end
     
+    it "should include the database port if set" do
+      conf = @index.to_config(0, @database.merge(:port => "1234"), "utf-8")
+      conf.should match(/sql_port\s+= 1234/)
+    end
+    
+    it "should not include the database port if not set" do
+      conf = @index.to_config(0, @database, "utf-8")
+      conf.should_not match(/sql_port/)
+    end
+
     it "should have a pre query 'SET NAMES utf8' if using mysql and utf8 charset" do
       @index.to_config(0, @database, "utf-8").should match(
         /sql_query_pre\s+= SET NAMES utf8/
